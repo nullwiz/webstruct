@@ -4,11 +4,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	Arrays "webstruct/arrays"
+
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
-	Arrays "webstruct/arrays"
 )
-//import functions from array file 
+
 
 var objectStore = ""
 var arrayOps = []string{"add", "remove", "get", "remDups", "toLowcase"}
@@ -20,7 +21,7 @@ func init(){
 func main() {
   // Set the router as the default one shipped with Gin
   router := gin.Default()
-  router.Use(gin.Logger())
+  router.Use(gin.Logger(), CORSMiddleware())
   log.Println("Starting server...")
 
   router.Use(static.Serve("/", static.LocalFile("./views", true)))
@@ -61,6 +62,23 @@ func StructHandler(c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{ "message" : structs })
 }
 
+func CORSMiddleware() gin.HandlerFunc {
+    return func(c *gin.Context) {
+
+        c.Header("Access-Control-Allow-Origin", "*")
+        c.Header("Access-Control-Allow-Credentials", "true")
+        c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+        c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+        if c.Request.Method == "OPTIONS" {
+            c.AbortWithStatus(204)
+            return
+        }
+
+        c.Next()
+    }
+}
+
 func ArraysHandlerPost(c *gin.Context){
 	c.Header("Content-Type", "application/json")
 	op := c.Query("op")
@@ -72,18 +90,18 @@ func ArraysHandlerPost(c *gin.Context){
 		case "add":
 			array := c.Query("array")
 			objectStore = array
-			c.JSON(http.StatusOK, gin.H{ "message" : "Array added to objectstore: " + objectStore})
+			c.JSON(http.StatusOK, gin.H{ "message" : "Array added" , "array" : objectStore})
 		case "remove":
 			objectStore = ""
-			c.JSON(http.StatusOK, gin.H{ "message" : "Array removed from objectstore"})
+			c.JSON(http.StatusOK, gin.H{ "message" : "Array removed"})
 		case "get":
-			c.JSON(http.StatusOK, gin.H{ "message" : objectStore})
+			c.JSON(http.StatusOK, gin.H{ "message": "Array retrieved" , "array" : objectStore})
 		case "remDups":
 			objectStore = Arrays.RemoveDuplicatesFromStringLiteral(objectStore)
-			c.JSON(http.StatusOK, gin.H{ "message" : objectStore})
+			c.JSON(http.StatusOK, gin.H{ "message" : "Array removed duplicates" , "array" : objectStore})
 		case "toLowcase":
 			objectStore = Arrays.Lowercase(objectStore)
-			c.JSON(http.StatusOK, gin.H{ "message" : objectStore})
+			c.JSON(http.StatusOK, gin.H{ "message" : "Array to lowercase" , "array" : objectStore})
 		default:
 			c.JSON(http.StatusBadRequest, gin.H{ "message" : "Invalid operation"})
 			return

@@ -1,5 +1,5 @@
 import Navbar from './components/navbar';
-import ArrayComponent from './components/textinput';
+import ArrayComponent from './components/array';
 function Arrays() {
   return (
     <div class="overflow-hidden">
