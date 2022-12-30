@@ -11,7 +11,7 @@ export default function ArrayComponent() {
   const url = process.env.REACT_APP_API_URL
 
   console.log(url)
-  const [array, setArray] = React.useState([])
+  const [hashMap, setHashmap] = React.useState([])
 
   const variants = {
     visible: {

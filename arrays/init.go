@@ -1,12 +1,62 @@
-package arrays
+package array
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strings"
+	d "webstruct/database"
 
 	"modernc.org/sortutil"
 )
+
+type ArrayInterface interface {
+	opHandler()
+}
+
+type ArrayMethods interface {
+	RemoveDuplicates()
+	RemoveDuplicatesFromStringLiteral()
+	IsPalindrome()
+	Lowercase()
+	IsPalindromePermutation()
+	IsPermutation()
+}
+
+type ArrayH struct {
+	handler  d.ArrayHandler
+	database d.StructDB
+}
+
+func (c ArrayH) validateOp() error {
+	var arrayOps = []string{"add", "remove", "get", "remDups", "toLowcase", "isPalindrome"}
+	for _, opVal := range arrayOps {
+		if opVal == c.handler.Operation {
+			return nil
+		}
+	}
+	return fmt.Errorf("invalid operation '%s'", c.handler.Operation)
+}
+
+func (c ArrayH) opHandler() (int, error) {
+	if c.validateOp() == nil {
+		switch c.handler.Operation {
+		case "add":
+			_, err := c.database.AddArray(c.handler, c.handler)
+			if err != nil {
+				log.Fatal("error when adding array")
+			}
+			return 1, nil
+		case "get":
+			_, err := c.database.GetArray(c.handler, c.handler)
+			if err != nil {
+				log.Fatal("error when getting array")
+			}
+			return 1, nil
+		}
+	}
+	return 0, fmt.Errorf("invalid operation")
+}
 
 func RemoveDuplicates(elements []string) []string {
 	// Use map to record duplicates as we find them.
