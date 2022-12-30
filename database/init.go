@@ -28,9 +28,9 @@ func (c *StructDB) AddArray(payload ArrayHandler) error {
 	return nil
 }
 
-func (c *StructDB) GetArray(payload ArrayHandler) error {
+func (c *StructDB) GetArray(payload ArrayHandler) (ArrayHandler, error) {
 	if _, ok := c.arrays[payload.ID]; ok {
-		return nil
+		return c.arrays[payload.ID], nil
 	}
 	return fmt.Errorf("array not found '%d'", payload.ID)
 }
