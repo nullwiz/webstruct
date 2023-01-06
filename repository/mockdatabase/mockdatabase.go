@@ -42,7 +42,8 @@ func (r *MockDatabase) AddOperationToSession(item entity.Operation) (err error) 
 	// autoincrement id
 	item.ID = strconv.Itoa(len(r.operations) + 1)
 	var session = r.sessions[item.SessionID]
-	session.AddOperation(&item)
+	session.Operations = append(r.sessions[item.SessionID].Operations, &item)
+	r.sessions[item.SessionID] = session
 	return nil
 }
 func (r *MockDatabase) GetResultFromSession(entity string, key string) (result interface{}, err error) {
