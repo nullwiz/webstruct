@@ -10,7 +10,7 @@ func (ser *Service) ProcessOperation(input entity.Operation) (string, error) {
 	// get the session
 	var session entity.Session
 	session, err = ser.Repository.GetSession(input.SessionID)
-	if err != nil {
+	if err == nil {
 		// Append operation to session
 		ser.Repository.AddOperationToSession(input)
 		// Process operation
@@ -19,8 +19,22 @@ func (ser *Service) ProcessOperation(input entity.Operation) (string, error) {
 			switch input.Type {
 			case "add":
 				ser.Repository.SetResultToSession("String", input.Value, session.ID)
+				return "added string", nil
+			case "get":
+				//get result inteerface
+				// cast to string
+				// return string
+				val, err := ser.Repository.GetResultFromSession("String", session.ID)
+				if err == nil && val != "" {
+					str, ok := val.(string)
+					if ok {
+						return str, nil
+					}
+				}
+				return "empty str", err
 			case "remove":
 				ser.Repository.SetResultToSession("String", "", session.ID)
+				return "removed string", nil
 			case "removeDups":
 				val, err := ser.Repository.GetResultFromSession("String", session.ID)
 				// cast val to string
@@ -43,10 +57,10 @@ func (ser *Service) ProcessOperation(input entity.Operation) (string, error) {
 				}
 			}
 		default:
-			return "", nil
+			return "not implemented", nil
 		}
 	}
-	return "", nil
+	return "", err
 }
 
 func (ser *Service) CreateSession(key string) error {
@@ -56,4 +70,8 @@ func (ser *Service) CreateSession(key string) error {
 	session.Results = make(map[string]interface{})
 	ser.Repository.AddSession(session)
 	return nil
+}
+
+func (ser *Service) GetSession(key string) (entity.Session, error) {
+	return ser.Repository.GetSession(key)
 }

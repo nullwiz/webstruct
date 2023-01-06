@@ -25,7 +25,11 @@ func (r *MockDatabase) AddSession(item entity.Session) (err error) {
 	return nil
 }
 func (r *MockDatabase) GetSession(key string) (entity.Session, error) {
-	return r.sessions[key], nil
+	// if there is a session, return it, if not, fail
+	if _, ok := r.sessions[key]; ok {
+		return r.sessions[key], nil
+	}
+	return entity.Session{}, entity.ErrSessionNotFound
 }
 func (r *MockDatabase) RecordTimestampOnSession(key string) (err error) {
 	var session = r.sessions[key]
@@ -53,7 +57,9 @@ func (r *MockDatabase) ClearOperationsFromSession(key string) (err error) {
 }
 func (r *MockDatabase) SetResultToSession(entity string, result interface{}, key string) (err error) {
 	var session = r.sessions[key]
+	// add result to session key
 	session.SetResult(entity, result)
+
 	return nil
 }
 

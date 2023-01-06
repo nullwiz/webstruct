@@ -15,10 +15,8 @@ type GinHandler struct {
 func NewGinHandler(usecase base.UseCase) *gin.Engine {
 	h := &GinHandler{Usecase: usecase}
 	r := gin.Default()
-	r.POST("/structures/operation", h.ProcessOperation)
-	// add  middleware to all paths
 	r.Use(middleware.SessionMiddleware(h.Usecase))
-
+	r.POST("/structures/operation", h.ProcessOperation)
 	return r
 }
 
@@ -40,6 +38,13 @@ func (h *GinHandler) ProcessOperation(c *gin.Context) {
 	op.Type = l.Type
 	if l.Value != "" {
 		op.Value = l.Value
+	}
+	//op.SessionID, err = c.Cookie("X-SESSION-ID")
+	// get from context
+	op.SessionID = c.GetString("X-SESSION-ID")
+	if err != nil {
+		ErrHandler(err, c)
+		return
 	}
 
 	result, err := h.Usecase.ProcessOperation(op)

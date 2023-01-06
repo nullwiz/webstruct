@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"crypto/sha256"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"webstruct/entity"
 
@@ -39,4 +41,9 @@ func (input OperationRequest) Validate() error {
 		return entity.ErrEmpty
 	}
 	return nil
+}
+
+func createHash(input string) string {
+	hash := sha256.Sum256([]byte(input))
+	return fmt.Sprintf("%x", hash)
 }

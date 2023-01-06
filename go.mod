@@ -4,8 +4,8 @@ go 1.17
 
 require (
 	github.com/gin-gonic/gin v1.8.2
+	github.com/google/uuid v1.3.0
 	github.com/rs/zerolog v1.28.0
-	github.com/satori/go.uuid v1.2.0
 	modernc.org/sortutil v1.1.1
 )
 
@@ -30,4 +30,3 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-

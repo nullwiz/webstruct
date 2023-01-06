@@ -3,8 +3,24 @@
   "configuration": [
     {
       // ...
-      "program": "${workspaceRoot}",
+      "program": "${workspaceRoot}"
       // ...
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Launch file",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "main.go"
+    },
+    {
+      "name": "Attach to Process",
+      "type": "go",
+      "request": "attach",
+      "mode": "local",
+      "processId": 0
     }
   ]
 }
