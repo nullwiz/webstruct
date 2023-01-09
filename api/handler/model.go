@@ -7,5 +7,5 @@ type OperationRequest struct {
 }
 
 type OperationResponse struct {
-	Result string `json:"result"`
+	Result interface{} `json:"result"`
 }

@@ -27,7 +27,7 @@ func RemoveDups(elements string) string {
 	}
 	fmt.Println(result)
 	// join array back into string
-	return strings.Join(arr, "")
+	return strings.Join(result, "")
 }
 
 // declare array function to check if palindrome

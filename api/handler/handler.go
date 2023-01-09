@@ -15,7 +15,7 @@ type GinHandler struct {
 func NewGinHandler(usecase base.UseCase) *gin.Engine {
 	h := &GinHandler{Usecase: usecase}
 	r := gin.Default()
-	r.Use(middleware.SessionMiddleware(h.Usecase))
+	r.Use(middleware.SessionMiddleware(h.Usecase), middleware.CORSMiddleware())
 	r.POST("/structures/operation", h.ProcessOperation)
 	return r
 }
@@ -52,6 +52,7 @@ func (h *GinHandler) ProcessOperation(c *gin.Context) {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
 	res := OperationResponse{Result: result}
 	c.JSON(200, res)
 }

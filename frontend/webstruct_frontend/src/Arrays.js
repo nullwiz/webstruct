@@ -1,14 +1,12 @@
-import Navbar from './components/navbar';
-import ArrayComponent from './components/array';
+import Navbar from './components/navbar'
+import ArrayComponent from './components/array/array'
 function Arrays() {
   return (
-    <div class="overflow-hidden">
-      <Navbar/>
-      <div class="">
-         <ArrayComponent/>
-      </div>
+    <div className="overflow-hidden">
+      <Navbar />
+      <ArrayComponent />
     </div>
-    );
+  )
 }
 
-export default Arrays;
+export default Arrays
